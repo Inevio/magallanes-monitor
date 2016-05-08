@@ -34,4 +34,5 @@ module.exports = {
 
 };
 
+module.exports.monitorUpdate();
 setInterval( module.exports.monitorUpdate, 10 * 1000 );
