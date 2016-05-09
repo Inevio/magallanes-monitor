@@ -10,7 +10,7 @@ var client = vertigo.createClient({ host : 'magallanes-server', port : 21042 });
 // Listen petitions
 module.exports = {
 
-  nodes : require('./cmd/nodes' ).bind( null, client ),
+  /*nodes : require('./cmd/nodes' ).bind( null, client ),
   nodeByName : require('./cmd/nodeByName' ).bind( null, client ),
   nodeByIP : require('./cmd/nodeByIP' ).bind( null, client ),
   addNode : require('./cmd/addNode' ).bind( null, client ),
@@ -29,10 +29,12 @@ module.exports = {
   scaleImageInAllNode : require('./cmd/scaleImageInAllNode' ).bind( null, client ),
   scaleImageInNodeByIP : require('./cmd/scaleImageInNodeByIP' ).bind( null, client ),
   scaleImageInNodeByName : require('./cmd/scaleImageInNodeByName' ).bind( null, client ),
-  registerService : require('./cmd/registerService' ).bind( null, client ),
+  registerService : require('./cmd/registerService' ).bind( null, client ),*/
+  monitorNode : require('./cmd/monitorNode' ).bind( null, client ),
   monitorUpdate : require('./cmd/monitorUpdate' ).bind( null, client )
 
 };
 
+module.exports.monitorNode();
 module.exports.monitorUpdate();
 setInterval( module.exports.monitorUpdate, 10 * 1000 );
