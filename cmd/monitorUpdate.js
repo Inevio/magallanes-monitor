@@ -1,13 +1,20 @@
 'use strict';
 
 // Modules
-var execFile = require('child_process').execFile;
-var ip = require('ip');
+var hostIp = require('../hostIp');
 
 module.exports = function( client, callback ){
 
-  client.request( 'monitorUpdate', process.env.HOST_IP || ip.address(), function( error ){
-    //callback( error );
+  hostIp( function( error, ip ){
+
+    if( error ){
+      return callback( error );
+    }
+
+    client.request( 'monitorUpdate', ip, function( error ){
+      callback( error );
+    });
+
   });
 
 };
