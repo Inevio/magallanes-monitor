@@ -4,7 +4,7 @@
 var hostIp  = require('../hostIp');
 var request = require('request');
 
-module.exports = function( client, image, containerName,callback ){
+module.exports = function( client, image, containerName, callback ){
 
   hostIp( function( error, ip ){
 
@@ -39,13 +39,41 @@ module.exports = function( client, image, containerName,callback ){
 
         url : 'http://' + ip + ':2375/containers/create?name=' + containerName,
         json : {
-          'Image' : image
+              'Image' : image,
+              'HostConfig' : {
+                  'RestartPolicy' : {
+                      'Name' : 'on-failure'
+                  },
+                  'NetworkMode': 'localnet'
+              },
+              'NetworkingConfig': {
+                  'EndpointsConfig': {
+                      'localnet': {
+                        'Aliases': [ containerName ]
+                      }
+                    }
+              }
         }
 
       };
 
-      request.post( req, function( error, http, secondaryBody ){
-        callback( error, [ body, secondaryBody ] );
+      request.post( req, function( error, http, secondBody ){
+
+        if ( error ) {
+            return callback( error );
+        }
+
+        var req = {
+          url : 'http://' + ip + ':2375/containers/' + secondBody.Id + '/start'
+        };
+
+        request.post( req, function     ( error, http, thirdBody ) {
+            if ( error ) {
+                return callback( error );
+            }
+            callback( null, [ body, secondBody, thirdBody ] );
+        });
+
       });
 
     });

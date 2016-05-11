@@ -3,7 +3,7 @@
 // Modules
 var execFile = require('child_process').execFile;
 
-module.exports = function( client, callback ){
+module.exports = function( callback ){
 
   execFile( 'ip', ['route'], function( error, stdout ){
 

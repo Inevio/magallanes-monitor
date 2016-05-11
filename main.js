@@ -7,14 +7,17 @@ var vertigo = require('vertigo');
 var server = vertigo.createServer( 21042 );
 var client = vertigo.createClient({ host : 'magallanes-server', port : 21042 });
 
+server.on('monitotAddImage', function (image, callback) {
+    console.log('Operation started');
+    require('./cmd/monitorAddImage' )( null, image, 'imagetest', function ( err, data ) {
+        console.log('Operation ended');
+        callback( err, data );
+    });
+});
+
 // Listen petitions
-module.exports = {
 
-  monitorAddImage : require('./cmd/monitorAddImage' ).bind( null, client ),
-  monitorNode : require('./cmd/monitorNode' ).bind( null, client ),
-  monitorUpdate : require('./cmd/monitorUpdate' ).bind( null, client )
+var monitorUpdate = require('./cmd/monitorUpdate' ).bind( null, client );
 
-};
-
-module.exports.monitorUpdate();
-setInterval( module.exports.monitorUpdate, 10 * 1000 );
+monitorUpdate();
+setInterval( monitorUpdate, 10 * 1000 );
