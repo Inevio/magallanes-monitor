@@ -1,5 +1,5 @@
 {
-  "name": "magallanes-cli",
+  "name": "magallanes-monitor",
   "version": "0.0.1",
   "description": "",
   "main": "main.js",
@@ -8,16 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Inevio/magallanes-cli.git"
+    "url": "git+https://github.com/Inevio/magallanes-monitor.git"
   },
   "author": "Inevio Inc",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Inevio/magallanes-cli/issues"
+    "url": "https://github.com/Inevio/magallanes-monitor/issues"
   },
-  "homepage": "https://github.com/Inevio/magallanes-cli#readme",
+  "homepage": "https://github.com/Inevio/magallanes-monitor#readme",
   "dependencies": {
-    "ip": "^1.1.3",
     "request": "^2.72.0",
     "vertigo": "0.0.6"
   }

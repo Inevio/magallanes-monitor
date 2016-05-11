@@ -11,7 +11,4 @@ var client = vertigo.createClient({ host : 'magallanes-server', port : 21042 });
 server.on( 'monitotAddImage', require('./cmd/monitorAddImage' ) );
 
 // Update monitor status
-var monitorUpdate = require('./cmd/monitorUpdate' ).bind( null, client );
-
-monitorUpdate();
-setInterval( monitorUpdate, 10 * 1000 );
+require('./cmd/monitorUpdate' )( client );
