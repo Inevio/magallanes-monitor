@@ -1,7 +1,6 @@
 'use strict';
 
 // Modules
-var hostIp  = require('../hostIp');
 var request = require('request');
 
 module.exports = function( image, callback ){
@@ -12,7 +11,24 @@ module.exports = function( image, callback ){
     containerName = image.split(':')[ 0 ];
   }
 
-  hostIp( function( error, ip ){
+  var req = {
+
+    url : 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image,
+    headers : {
+
+      'X-Registry-Auth' : new Buffer( JSON.stringify({
+
+        username : process.env.REGISTRY_USER || '',
+        password : process.env.REGISTRY_PASS || '',
+        email    : process.env.REGISTRY_MAIL || ''
+
+      }) ).toString('base64')
+
+    }
+
+  };
+
+  request.post( req, function( error, http, body ){
 
     if( error ){
       return callback( error );
@@ -20,68 +36,43 @@ module.exports = function( image, callback ){
 
     var req = {
 
-      url : 'http://' + ip + ':2375/images/create?fromImage=' + image,
-      headers : {
-
-        'X-Registry-Auth' : new Buffer( JSON.stringify({
-
-          username : process.env.REGISTRY_USER || '',
-          password : process.env.REGISTRY_PASS || '',
-          email    : process.env.REGISTRY_MAIL || ''
-
-        }) ).toString('base64')
-
+      url : 'http://' + process.env.HOST_IP + ':2375/containers/create?name=' + containerName,
+      json : {
+        'Image' : image,
+        'HostConfig' : {
+          'RestartPolicy' : {
+            'Name' : 'on-failure'
+          },
+          'NetworkMode': 'localnet'
+        },
+        'NetworkingConfig': {
+          'EndpointsConfig': {
+            'localnet': {
+              'Aliases': [ containerName ]
+            }
+          }
+        }
       }
 
     };
 
-    request.post( req, function( error, http, body ){
+    request.post( req, function( error, http, secondBody ){
 
-      if( error ){
+      if ( error ) {
         return callback( error );
       }
 
       var req = {
-
-        url : 'http://' + ip + ':2375/containers/create?name=' + containerName,
-        json : {
-          'Image' : image,
-          'HostConfig' : {
-            'RestartPolicy' : {
-              'Name' : 'on-failure'
-            },
-            'NetworkMode': 'localnet'
-          },
-          'NetworkingConfig': {
-            'EndpointsConfig': {
-              'localnet': {
-                'Aliases': [ containerName ]
-              }
-            }
-          }
-        }
-
+        url : 'http://' + process.env.HOST_IP + ':2375/containers/' + secondBody.Id + '/start'
       };
 
-      request.post( req, function( error, http, secondBody ){
+      request.post( req, function( error, http, thirdBody ){
 
         if ( error ) {
           return callback( error );
         }
 
-        var req = {
-          url : 'http://' + ip + ':2375/containers/' + secondBody.Id + '/start'
-        };
-
-        request.post( req, function( error, http, thirdBody ){
-
-          if ( error ) {
-            return callback( error );
-          }
-
-          callback( null, [ body, secondBody, thirdBody ] );
-
-        });
+        callback( null, [ body, secondBody, thirdBody ] );
 
       });
 
