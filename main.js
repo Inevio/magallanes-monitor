@@ -9,6 +9,7 @@ var client = vertigo.createClient({ host : 'magallanes-server', port : 21042 });
 
 // Listen petitions
 server.on( 'monitotAddImage', require('./cmd/monitorAddImage' ) );
+server.on( 'monitorNode', require('./cmd/monitorNode') );
 
 // Update monitor status
 require('./cmd/monitorUpdate' )( client );
