@@ -13,12 +13,14 @@ module.exports = function( image, callback ){
 
     async.map( containers, function ( item, callback ) {
 
-      request.post( 'http://' + process.env.HOST_IP + ':2375/containers' + item.Id + '/kill', function ( err, http, body ) {
+      request.del( 'http://' + process.env.HOST_IP + ':2375/containers/' + item.Id + '?force=true', function ( err, http, body ) {
 
-        if ( err ) return callback( err );
+        if ( err ){
+          return callback( err );
+        }
 
         request.del('http://' + process.env.HOST_IP + ':2375/images/' + image, function ( err, http, body ) {
-           callback( err );
+          callback( err );
         });
 
       });
