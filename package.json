@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Inevio/magallanes-monitor#readme",
   "dependencies": {
+    "async":  "2.0.0-rc.4",
     "request": "^2.72.0",
     "vertigo": "0.0.6"
   }
