@@ -11,7 +11,7 @@ module.exports = function( image, callback ){
       return item.Image === image;
     });
 
-    async.forEach( containers, function ( item, callback ) {
+    async.map( containers, function ( item, callback ) {
 
       request.post( 'http://' + process.env.HOST_IP + ':2375/containers' + item.Id + '/kill', function ( err, http, body ) {
 

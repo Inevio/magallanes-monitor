@@ -1,7 +1,7 @@
 'use strict'
 
 // Global Modules
-require('./async');
+require('./lib/async');
 
 // Modules
 var vertigo = require('vertigo');
