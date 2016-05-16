@@ -6,15 +6,18 @@ var request = require('request');
 module.exports = function( image, callback ){
 
   if( image.indexOf('/') !== -1 ){
-    containerName = image.split('/')[ 1 ].split(':')[ 0 ];
+    var containerName = image.split('/')[ 1 ].split(':')[ 0 ];
   }else{
-    containerName = image.split(':')[ 0 ];
+    var containerName = image.split(':')[ 0 ];
   }
 
-  var req = {
+  var req = {};
 
-    url : 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image,
-    headers : {
+  req.url = 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image;
+
+  if( /:\d+\//.test( image ) ){
+
+    req.headers = {
 
       'X-Registry-Auth' : new Buffer( JSON.stringify({
 
@@ -24,9 +27,9 @@ module.exports = function( image, callback ){
 
       }) ).toString('base64')
 
-    }
+    };
 
-  };
+  }
 
   request.post( req, function( error, http, body ){
 
