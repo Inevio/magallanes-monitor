@@ -1,9 +1,12 @@
 'use strict';
 
+var update = function(){
+  client.request( 'monitorUpdate', process.env.HOST_IP, function( error ){});
+};
+
 module.exports = function( client ){
 
-  setInterval( function(){
-    client.request( 'monitorUpdate', process.env.HOST_IP, function( error ){});
-  }, 10 * 1000 );
+  update();
+  setInterval( update, 10 * 1000 );
 
 };
