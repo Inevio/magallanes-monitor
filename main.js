@@ -14,6 +14,7 @@ var client = vertigo.createClient({ host : process.env.MAGALLANES_SERVER || 'mag
 server.on( 'monitorAddImage', require('./cmd/monitorAddImage' ) );
 server.on( 'monitorNode', require('./cmd/monitorNode') );
 server.on( 'monitorRemoveImage', require('./cmd/monitorRemoveImage') );
+server.on( 'monitorUpdateImages', require('./cmd/monitorUpdateImages') );
 
 // Update monitor status
 require('./cmd/monitorUpdate' )( client );
