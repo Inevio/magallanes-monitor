@@ -8,7 +8,7 @@ var vertigo = require('vertigo');
 
 // Create server and client
 var server = vertigo.createServer( 21042 );
-var client = vertigo.createClient({ host : 'magallanes-server', port : 21041 });
+var client = vertigo.createClient({ host : process.env.MAGALLANES_SERVER || 'magallanes-server', port : 21041 });
 
 // Listen petitions
 server.on( 'monitotAddImage', require('./cmd/monitorAddImage' ) );
