@@ -9,7 +9,7 @@ module.exports = function( image, callback ){
   }
 
   var req = {
-    url = 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image
+    url : 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image
   };
 
   if( /:\d+\//.test( image ) ){
