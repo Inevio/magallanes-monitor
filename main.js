@@ -2,6 +2,7 @@
 
 // Global Modules
 require('./lib/async');
+require('./lib/request');
 
 // Modules
 var vertigo = require('vertigo');
@@ -15,6 +16,7 @@ server.on( 'monitorAddImage', require('./cmd/monitorAddImage' ) );
 server.on( 'monitorNode', require('./cmd/monitorNode') );
 server.on( 'monitorRemoveImage', require('./cmd/monitorRemoveImage') );
 server.on( 'monitorUpdateImages', require('./cmd/monitorUpdateImages') );
+server.on( 'monitorScaleImage', require('./cmd/monitorScaleImages') );
 
 // Update monitor status
 require('./cmd/monitorUpdate' )( client );

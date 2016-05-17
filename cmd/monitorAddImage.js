@@ -1,8 +1,5 @@
 'use strict';
 
-// Modules
-var request = require('request');
-
 module.exports = function( image, callback ){
 
   if( image.indexOf('/') !== -1 ){
@@ -11,9 +8,9 @@ module.exports = function( image, callback ){
     var containerName = image.split(':')[ 0 ];
   }
 
-  var req = {};
-
-  req.url = 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image;
+  var req = {
+    url = 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image
+  };
 
   if( /:\d+\//.test( image ) ){
 
