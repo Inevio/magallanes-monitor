@@ -20,3 +20,8 @@ server.on( 'monitorScaleImage', require('./cmd/monitorScaleImages') );
 
 // Update monitor status
 require('./cmd/monitorUpdate' )( client );
+
+// Service listener
+server.on( 'updateService', function ( info, callback ) {
+  client.request('updateService', info, callback);
+});
