@@ -17,11 +17,14 @@ server.on( 'monitorNode', require('./cmd/monitorNode') );
 server.on( 'monitorRemoveImage', require('./cmd/monitorRemoveImage') );
 server.on( 'monitorUpdateImages', require('./cmd/monitorUpdateImages') );
 server.on( 'monitorScaleImage', require('./cmd/monitorScaleImages') );
+server.on( 'monitorKillContainer', require('./cmd/monitorKillContainer') );
 
 // Update monitor status
 require('./cmd/monitorUpdate' )( client );
 
 // Service listener
 server.on( 'updateService', function ( info, callback ) {
-  client.request('updateService', info, callback);
+  client.request('registerService', info, callback);
 });
+server.on( 'killService', require('./cmd/monitorKillContainer') );
+server.on( 'serviceSuspend', require('./cmd/serviceSuspend') );
