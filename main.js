@@ -19,8 +19,6 @@ server.on( 'monitorRemoveImage', require('./cmd/monitorRemoveImage') );
 server.on( 'monitorScaleImage', require('./cmd/monitorScaleImages') );
 server.on( 'monitorUpdateImages', require('./cmd/monitorUpdateImages') );
 
-
-
 // Service listener
 server.on( 'updateService', function ( info, callback ) {
   client.request('registerService', info, callback);
