@@ -13,11 +13,11 @@ var client = vertigo.createClient({ host : process.env.MAGALLANES_SERVER || 'mag
 
 // Listen petitions
 server.on( 'monitorAddImage', require('./cmd/monitorAddImage' ) );
+server.on( 'monitorKillContainer', require('./cmd/monitorKillContainer') );
 server.on( 'monitorNode', require('./cmd/monitorNode') );
 server.on( 'monitorRemoveImage', require('./cmd/monitorRemoveImage') );
-server.on( 'monitorUpdateImages', require('./cmd/monitorUpdateImages') );
 server.on( 'monitorScaleImage', require('./cmd/monitorScaleImages') );
-server.on( 'monitorKillContainer', require('./cmd/monitorKillContainer') );
+server.on( 'monitorUpdateImages', require('./cmd/monitorUpdateImages') );
 
 // Update monitor status
 require('./cmd/monitorUpdate' )( client );
@@ -26,5 +26,6 @@ require('./cmd/monitorUpdate' )( client );
 server.on( 'updateService', function ( info, callback ) {
   client.request('registerService', info, callback);
 });
+
 server.on( 'killService', require('./cmd/monitorKillContainer') );
 server.on( 'serviceSuspend', require('./cmd/serviceSuspend') );
