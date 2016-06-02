@@ -4,7 +4,20 @@ module.exports = function( images, callback ){
 
   if ( Object.prototype.toString.call( images ) !== '[object Array]' ) {
 
-    request.get( 'http://' + process.env.HOST_IP + ':2375/images/json?all=true', function( error, http, body ){
+    var req = {};
+
+    if ( process.env.HOST_PORT === '2376' ) {
+
+      req.url  = 'https://' + process.env.HOST_IP + ':2376/images/json?all=true';
+      req.cert = fs.readFileSync( __dirname + '/../cert/cert.pem' );
+      req.key  = fs.readFileSync( __dirname + '/../cert/key.pem' );
+      req.ca   = fs.readFileSync( __dirname + '/../cert/ca.pem' );
+
+    } else {
+      req.url = 'http://' + process.env.HOST_IP + ':2375/images/json?all=true';
+    }
+
+    request.get( req, function( error, http, body ){
 
       images = new Array();
       body = JSON.parse( body );
@@ -30,7 +43,6 @@ function updateImage( images, callback ) {
 
     var req = {
 
-      url : 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image,
       headers : {
 
         'X-Registry-Auth' : new Buffer( JSON.stringify({
@@ -44,6 +56,17 @@ function updateImage( images, callback ) {
       }
 
     };
+
+    if ( process.env.HOST_PORT === '2376' ) {
+
+      req.url  = 'https://' + process.env.HOST_IP + ':2376/images/create?fromImage=' + image;
+      req.cert = fs.readFileSync( __dirname + '/../cert/cert.pem' );
+      req.key  = fs.readFileSync( __dirname + '/../cert/key.pem' );
+      req.ca   = fs.readFileSync( __dirname + '/../cert/ca.pem' );
+
+    } else {
+      req.url = 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image;
+    }
 
     request.post( req, function ( error, http, body ) {
       callback( error, body );

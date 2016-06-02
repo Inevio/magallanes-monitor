@@ -8,9 +8,18 @@ module.exports = function( image, callback ){
     var containerName = image.split(':')[ 0 ];
   }
 
-  var req = {
-    url : 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image
-  };
+  var req = {};
+
+  if ( process.env.HOST_PORT === '2376' ) {
+
+    req.url  = 'https://' + process.env.HOST_IP + ':2376/images/create?fromImage=' + image;
+    req.cert = fs.readFileSync( __dirname + '/../cert/cert.pem' );
+    req.key  = fs.readFileSync( __dirname + '/../cert/key.pem' );
+    req.ca   = fs.readFileSync( __dirname + '/../cert/ca.pem' );
+
+  } else {
+    req.url = 'http://' + process.env.HOST_IP + ':2375/images/create?fromImage=' + image;
+  }
 
   if( /:\d+\//.test( image ) ){
 
@@ -56,15 +65,31 @@ module.exports = function( image, callback ){
 
     };
 
+    if ( process.env.HOST_PORT === '2376' ) {
+      req.url  = 'https://' + process.env.HOST_IP + ':2376/containers/create?name=' + containerName;
+      req.cert = fs.readFileSync( __dirname + '/../cert/cert.pem' );
+      req.key  = fs.readFileSync( __dirname + '/../cert/key.pem' );
+      req.ca   = fs.readFileSync( __dirname + '/../cert/ca.pem' );
+    } else {
+      req.url = 'http://' + process.env.HOST_IP + ':2375/containers/create?name=' + containerName;
+    }
+
     request.post( req, function( error, http, secondBody ){
 
       if ( error ) {
         return callback( error );
       }
 
-      var req = {
-        url : 'http://' + process.env.HOST_IP + ':2375/containers/' + secondBody.Id + '/start'
-      };
+      var req = {};
+
+      if ( process.env.HOST_PORT === '2376' ) {
+        req.url  = 'https://' + process.env.HOST_IP + ':2376/containers/' + secondBody.Id + '/start';
+        req.cert = fs.readFileSync( __dirname + '/../cert/cert.pem' );
+        req.key  = fs.readFileSync( __dirname + '/../cert/key.pem' );
+        req.ca   = fs.readFileSync( __dirname + '/../cert/ca.pem' );
+      } else {
+        req.url = 'http://' + process.env.HOST_IP + ':2375/containers/' + secondBody.Id + '/start';
+      }
 
       request.post( req, function( error, http, thirdBody ){
 

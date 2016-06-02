@@ -2,7 +2,20 @@
 
 module.exports = function( image, instances, callback ){
 
-  request.get( 'http://' + process.env.HOST_IP + ':2375/containers/json?all=true', function( error, http, body ){
+  var req = {};
+
+  if ( process.env.HOST_PORT === '2376' ) {
+
+    req.url  = 'https://' + process.env.HOST_IP + ':2376/containers/json?all=true';
+    req.cert = fs.readFileSync( __dirname + '/../cert/cert.pem' );
+    req.key  = fs.readFileSync( __dirname + '/../cert/key.pem' );
+    req.ca   = fs.readFileSync( __dirname + '/../cert/ca.pem' );
+
+  } else {
+    req.url = 'http://' + process.env.HOST_IP + ':2375/containers/json?all=true';
+  }
+
+  request.get( req, function( error, http, body ){
 
     var containers = JSON.parse( body ).filter(function ( item ) {
       return item.Image === image;
@@ -41,7 +54,21 @@ module.exports = function( image, instances, callback ){
 };
 
 function  deleteContainer ( cont, callback ) {
-  request.del('http://' + process.env.HOST_IP + ':2375/containers/' + cont + '?force=true', function ( err, http, body ) {
+
+  var req = {};
+
+  if ( process.env.HOST_PORT === '2376' ) {
+
+    req.url  = 'https://' + process.env.HOST_IP + ':2376/containers/' + cont + '?force=true';
+    req.cert = fs.readFileSync( __dirname + '/../cert/cert.pem' );
+    req.key  = fs.readFileSync( __dirname + '/../cert/key.pem' );
+    req.ca   = fs.readFileSync( __dirname + '/../cert/ca.pem' );
+
+  } else {
+    req.url = 'http://' + process.env.HOST_IP + ':2375/containers/' + cont + '?force=true';
+  }
+
+  request.del( req, function ( err, http, body ) {
     callback( err, body );
   });
 }
@@ -57,7 +84,6 @@ function startContainer ( image, id, callback ) {
   containerName += '-' + id;
 
   var req = {
-    url : 'http://' + process.env.HOST_IP + ':2375/containers/create?name=' + containerName,
     json : {
       'Image' : image,
       'HostConfig' : {
@@ -76,15 +102,35 @@ function startContainer ( image, id, callback ) {
     }
   };
 
+  if ( process.env.HOST_PORT === '2376' ) {
+
+    req.url  = 'https://' + process.env.HOST_IP + ':2376/containers/create?name=' + containerName;
+    req.cert = fs.readFileSync( __dirname + '/../cert/cert.pem' );
+    req.key  = fs.readFileSync( __dirname + '/../cert/key.pem' );
+    req.ca   = fs.readFileSync( __dirname + '/../cert/ca.pem' );
+
+  } else {
+    req.url = 'http://' + process.env.HOST_IP + ':2375/containers/create?name=' + containerName;
+  }
+
   request.post( req, function( error, http, body ){
 
     if( error ){
       return callback( error );
     }
 
-    var req = {
-      url : 'http://' + process.env.HOST_IP + ':2375/containers/' + body.Id + '/start'
-    };
+    var req = {};
+
+    if ( process.env.HOST_PORT === '2376' ) {
+
+      req.url  = 'https://' + process.env.HOST_IP + ':2376/containers/' + body.Id + '/start';
+      req.cert = fs.readFileSync( __dirname + '/../cert/cert.pem' );
+      req.key  = fs.readFileSync( __dirname + '/../cert/key.pem' );
+      req.ca   = fs.readFileSync( __dirname + '/../cert/ca.pem' );
+
+    } else {
+      req.url = 'http://' + process.env.HOST_IP + ':2375/containers/' + body.Id + '/start';
+    }
 
     request.post( req, function( error, http, secondBody ){
 
